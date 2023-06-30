@@ -21,11 +21,11 @@ const Board: React.FC<BoardProps> = ({ initialData }) => {
   const [swimlanes, setSwimlanes] = useState(initialSwimlanes);
 
   const updateTasks = (updatedTasks) => {
-    setTasks((prevState) => updatedTasks);
+    setTasks(updatedTasks);
   };
 
   const updateSwimlanes = (updatedSwimlanes) => {
-    setSwimlanes((prevState) => updatedSwimlanes);
+    setSwimlanes(updatedSwimlanes);
   };
 
   const onDragEnd = (result: any): void => {
@@ -142,7 +142,10 @@ const Board: React.FC<BoardProps> = ({ initialData }) => {
       <DragDropContext onDragEnd={onDragEnd}>
         <div className="board">
           {swimlanes.map((swimlane) => (
-            <Droppable droppableId={swimlane.id} key={swimlane.type.toString()}>
+            <Droppable
+              droppableId={swimlane.id.toString()}
+              key={swimlane.type.toString()}
+            >
               {(provided) => (
                 <div
                   className="swimlane"
