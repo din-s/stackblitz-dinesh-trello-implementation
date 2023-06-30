@@ -12,11 +12,7 @@ interface BoardProps {
 const Board: React.FC<BoardProps> = ({ initialData }) => {
   const { tasks: initialTasks, swimlanes: initialSwimlanes } = initialData;
 
-  /* const [state, setState] = useState({
-    tasks,
-    swimlanes,
-  }); */
-
+  const [sourceDroppableIndex, setSourceDroppableIndex] = useState(null);
   const [tasks, setTasks] = useState(initialTasks);
   const [swimlanes, setSwimlanes] = useState(initialSwimlanes);
 
@@ -49,6 +45,7 @@ const Board: React.FC<BoardProps> = ({ initialData }) => {
        */
 
     const { draggableId, source, destination } = result;
+
     // if it is an invalid destination
     if (!destination) {
       // silent logging
@@ -63,18 +60,28 @@ const Board: React.FC<BoardProps> = ({ initialData }) => {
       destinationSwimlaneId == sourceSwimlaneId &&
       source.index == destination.index
     ) {
-      // silent loggingp
-      console.log('same location destination');
+      // silent logging
+      console.log('same origin and destination');
       return;
     }
 
     // for new location
+    // A: update task state
+    const updatedTasks = tasks.map((task) => {
+      if (task.id == draggableId) {
+        return {
+          ...task,
+          state: destinationSwimlaneId,
+        };
+      }
+      return task;
+    });
+    updateTasks(updatedTasks);
 
-    // update the swimlanes
+    // B: update the swimlanes
     const updatedSourceSwimlane = swimlanes.find(
       (swimlane) => swimlane.id == sourceSwimlaneId
     );
-    console.log('source swimlane:', updatedSourceSwimlane);
     updatedSourceSwimlane.taskIds.splice(source.index, 1);
 
     const updatedDestinationSwimlane = swimlanes.find(
@@ -86,17 +93,7 @@ const Board: React.FC<BoardProps> = ({ initialData }) => {
       0,
       draggableId
     );
-    console.log('destination swimlane:', updatedDestinationSwimlane);
 
-    /*    const updatedSourceSwimlane = {
-      ...sourceSwimlane,
-    };
-
-    const updatedDestinationSwimlane = {
-      ...destinationSwimlane,
-    }; */
-
-    console.log('Yaha issue hai', swimlanes);
     const updatedSwimlanes = swimlanes.map((swimlane) => {
       if (swimlane.id == updatedSourceSwimlane.id) {
         return updatedSourceSwimlane;
@@ -107,31 +104,16 @@ const Board: React.FC<BoardProps> = ({ initialData }) => {
       }
       return swimlane;
     });
-    // setState((prevState) => ({
-    //   ...prevState,
-    //   swimlanes: updatedSwimlanes,
-    // }));
-    updateSwimlanes(updateSwimlanes);
+    updateSwimlanes(updatedSwimlanes);
 
-    // also update task state
-    console.log('new location');
-    const updatedTasks = tasks.map((task) => {
-      if (task.id == draggableId) {
-        return {
-          ...task,
-          state: destinationSwimlaneId,
-        };
-      }
-      return task;
-    });
-    /* setState((prevState) => ({
-      ...prevState,
-      tasks: updatedTasks,
-    })); */
-    updateTasks(updatedTasks);
-    console.log(updatedTasks, updatedSwimlanes);
-    // console.log(state)
-    console.log('This is onComplete');
+    console.log(tasks, swimlanes);
+  };
+
+  const onDragStart = (startObj) => {
+    const sourceDroppableId = startObj?.source?.droppableId;
+    const index = swimlanes.findIndex(swimlane => swimlane.id == sourceDroppableId)
+    setSourceDroppableIndex(index);
+    console.log("drag start", startObj.source);
   };
 
   return (
@@ -139,12 +121,14 @@ const Board: React.FC<BoardProps> = ({ initialData }) => {
       <div className="header">
         <h3>Welcome to JEERU</h3> <span>Clone of JIRA</span>
       </div>
-      <DragDropContext onDragEnd={onDragEnd}>
+      <DragDropContext onDragEnd={onDragEnd}
+      onDragStart={onDragStart}>
         <div className="board">
-          {swimlanes.map((swimlane) => (
+          {swimlanes?.map((swimlane, index) => (
             <Droppable
               droppableId={swimlane.id.toString()}
               key={swimlane.type.toString()}
+              isDropDisabled={index < sourceDroppableIndex}
             >
               {(provided) => (
                 <div

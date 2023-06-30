@@ -38,18 +38,19 @@ const TaskCard: React.FC<TaskCardProps> = ({
 
   return (
     <div className="task-card-content">
-      {editMode ? (
+      {editMode || !task.title ? (
         <input
           type="text"
           maxLength={150}
           value={newTitle}
           onChange={handleTitleChange}
+          className="title-input"
         />
       ) : (
         <h5>{task.title}</h5>
       )}
       <div className="task-card-actions">
-        {editMode ? (
+        {editMode || !task.title ? (
           <button onClick={handleSaveClick}>Save</button>
         ) : (
           <button onClick={toggleEdit}>Edit</button>

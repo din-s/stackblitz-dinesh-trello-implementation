@@ -5,7 +5,7 @@ import TaskCard from './TaskCard';
 import { v4 as uuidV4 } from 'uuid';
 import { useState } from 'react';
 
-interface SwimlaneProps {
+export interface SwimlaneProps {
   tasks: Task[];
   laneType: string;
 }
@@ -60,7 +60,6 @@ const Swimlane: React.FC<SwimlaneProps> = ({ tasks, laneType }) => {
             >
               <TaskCard
                 task={task}
-                index={index}
                 onDelete={deleteTask}
                 updateTask={updateTask}
               />
