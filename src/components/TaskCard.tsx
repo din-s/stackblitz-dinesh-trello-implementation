@@ -5,7 +5,7 @@ import { Task } from '../utils';
 export interface TaskCardProps {
   task: Task;
   index: number;
-  onDelete: (index: number) => void;
+  onDelete: (id: string) => void;
   updateTask: (task: Task) => void;
 }
 

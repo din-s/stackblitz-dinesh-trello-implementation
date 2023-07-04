@@ -138,7 +138,8 @@ const Board: React.FC<BoardProps> = ({ initialData }) => {
                 >
                   <h4>{swimlane.title}</h4>
                   <Swimlane
-                    tasks={tasks.filter((task) => task.state === swimlane.id)}
+                    swimlaneTask={swimlane.taskIds.map((id) => tasks.find(task => task.id == id)
+                    )}
                     laneType={swimlane.id}
                   />
                   {provided.placeholder}
