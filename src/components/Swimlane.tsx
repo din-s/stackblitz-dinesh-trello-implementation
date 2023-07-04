@@ -5,12 +5,12 @@ import TaskCard from './TaskCard';
 import { v4 as uuidV4 } from 'uuid';
 import { useState } from 'react';
 
-interface SwimlaneProps {
-  tasks: Task[];
+export interface SwimlaneProps {
+  swimlaneTask: Task[];
   laneType: string;
 }
 
-const Swimlane: React.FC<SwimlaneProps> = ({ tasks, laneType }) => {
+const Swimlane: React.FC<SwimlaneProps> = ({ swimlaneTask: tasks, laneType }) => {
   const [state, setState] = useState({
     tasks,
     laneType,
@@ -41,9 +41,9 @@ const Swimlane: React.FC<SwimlaneProps> = ({ tasks, laneType }) => {
     updateTasks(tasks);
   };
 
-  const deleteTask = (index) => {
-    // TODO: to pass taskId
-    tasks.splice(index, 1);
+  const deleteTask = (id) => {
+    const spliceIndex = tasks.findIndex(task => task.id == id)
+    tasks.splice(spliceIndex, 1);
     updateTasks(tasks);
   };
 
@@ -60,7 +60,6 @@ const Swimlane: React.FC<SwimlaneProps> = ({ tasks, laneType }) => {
             >
               <TaskCard
                 task={task}
-                index={index}
                 onDelete={deleteTask}
                 updateTask={updateTask}
               />

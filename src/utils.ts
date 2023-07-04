@@ -38,7 +38,7 @@ export const initialData: InitialData = {
     {
       id: 'cef7700c-171f-11ee-be56-0242ac120002',
       title: 'UI Assignment',
-      state: 'Q',
+      state: 'QA',
     },
     {
       id: 'cef7712e-171f-11ee-be56-0242ac120002',
